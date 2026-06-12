@@ -1,0 +1,15 @@
+services:
+  mindmopper:
+    build: .
+    ports:
+      - "8080:8080"
+    volumes:
+      - mindmopper_data:/data
+    environment:
+      - PORT=8080
+      - DB_PATH=/data/data.db
+      - ENV=production
+    restart: unless-stopped
+
+volumes:
+  mindmopper_data:

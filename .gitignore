@@ -1,0 +1,14 @@
+# Database
+*.db
+*.db-shm
+*.db-wal
+
+# OMC state
+.omc/
+
+# Frontend
+web/node_modules/
+web/dist/
+
+# Go
+*.exe
