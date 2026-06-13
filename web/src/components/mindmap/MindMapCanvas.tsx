@@ -32,6 +32,7 @@ export function MindMapCanvas({ readOnly }: Props) {
         label: n.text,
         isRoot: n.parentId === null,
         isReadOnly: readOnly,
+        url: n.url ?? '',
       },
     }))
     const edges: Edge[] = mindNodes

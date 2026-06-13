@@ -13,6 +13,7 @@ export interface MindNode {
   parentId: UUID | null
   text: string
   sortOrder: number
+  url: string
   createdAt: string
   updatedAt: string
 }

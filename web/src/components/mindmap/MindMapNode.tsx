@@ -1,11 +1,12 @@
 import { memo, useCallback, useRef, useEffect } from 'react'
 import { Handle, Position } from '@xyflow/react'
 import { useEditorStore } from '../../stores/editorStore'
+import { NodeLinkToolbar } from './NodeToolbar'
 import clsx from 'clsx'
 
 interface MindMapNodeProps {
   id: string
-  data: { label: string; isRoot: boolean; isReadOnly?: boolean }
+  data: { label: string; isRoot: boolean; isReadOnly?: boolean; url: string }
   selected: boolean
 }
 
@@ -53,6 +54,7 @@ export const MindMapNode = memo(({ id, data, selected }: MindMapNodeProps) => {
         data.isRoot && 'border-gray-700 bg-gray-50 font-semibold',
       )}
     >
+      {selected && <NodeLinkToolbar id={id} url={data.url} isReadOnly={data.isReadOnly} />}
       {!data.isRoot && (
         <Handle type="target" position={Position.Left} className="!w-2 !h-2 !bg-gray-400" />
       )}
@@ -70,7 +72,17 @@ export const MindMapNode = memo(({ id, data, selected }: MindMapNodeProps) => {
           style={{ minWidth: 80 }}
         />
       ) : (
-        <span className="text-sm text-gray-800 block truncate">{data.label || <span className="text-gray-400 italic">empty</span>}</span>
+        <div className="flex items-center gap-1">
+          <span className="text-sm text-gray-800 block truncate flex-1">
+            {data.label || <span className="text-gray-400 italic">empty</span>}
+          </span>
+          {data.url && (
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
+              <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+              <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+            </svg>
+          )}
+        </div>
       )}
       <Handle type="source" position={Position.Right} className="!w-2 !h-2 !bg-gray-400" />
     </div>

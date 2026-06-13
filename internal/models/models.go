@@ -22,6 +22,7 @@ type Node struct {
 	ParentID  *string   `db:"parent_id"  json:"parentId"`
 	Text      string    `db:"text"       json:"text"`
 	SortOrder int       `db:"sort_order" json:"sortOrder"`
+	URL       string    `db:"url"        json:"url"`
 	CreatedAt time.Time `db:"created_at" json:"createdAt"`
 	UpdatedAt time.Time `db:"updated_at" json:"updatedAt"`
 }

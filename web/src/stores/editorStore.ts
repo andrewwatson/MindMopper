@@ -19,6 +19,7 @@ interface EditorState {
   addSibling: (siblingId: string) => string  // returns new node id
   deleteNode: (id: string) => void
   updateNodeText: (id: string, text: string) => void
+  updateNodeUrl: (id: string, url: string) => void
   getRootId: () => string | null
 }
 
@@ -53,6 +54,7 @@ export const useEditorStore = create<EditorState>((set, get) => ({
       parentId,
       text: '',
       sortOrder: maxOrder + 1,
+      url: '',
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     }
@@ -70,6 +72,7 @@ export const useEditorStore = create<EditorState>((set, get) => ({
       parentId: sibling.parentId,
       text: '',
       sortOrder: sibling.sortOrder + 1,
+      url: '',
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     }
@@ -110,6 +113,13 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   updateNodeText: (id, text) => {
     set(s => ({
       nodes: s.nodes.map(n => n.id === id ? { ...n, text } : n),
+      dirty: true,
+    }))
+  },
+
+  updateNodeUrl: (id, url) => {
+    set(s => ({
+      nodes: s.nodes.map(n => n.id === id ? { ...n, url } : n),
       dirty: true,
     }))
   },
