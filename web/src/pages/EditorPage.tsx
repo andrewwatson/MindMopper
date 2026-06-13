@@ -6,6 +6,7 @@ import { useEditorStore } from '../stores/editorStore'
 import { MindMapCanvas } from '../components/mindmap/MindMapCanvas'
 import { KeyboardController } from '../components/mindmap/KeyboardController'
 import { ShareDialog } from '../components/ShareDialog'
+import { EdgeStylePicker } from '../components/EdgeStylePicker'
 import { useDebouncedEffect } from '../hooks/useDebouncedEffect'
 
 export default function EditorPage() {
@@ -83,6 +84,7 @@ export default function EditorPage() {
         <Link to="/" className="text-gray-400 hover:text-gray-600 text-sm">← Maps</Link>
         <span className="text-gray-900 font-medium text-sm truncate flex-1">{data?.map.title}</span>
         <span className="text-xs text-gray-400">{savingLabel}</span>
+        <EdgeStylePicker />
         <button
           onClick={() => setShowShare(true)}
           className="text-sm px-3 py-1.5 border border-gray-300 rounded-md hover:bg-gray-50"

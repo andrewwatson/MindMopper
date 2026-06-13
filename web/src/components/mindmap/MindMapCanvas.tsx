@@ -8,6 +8,7 @@ import {
   type Edge,
 } from '@xyflow/react'
 import { useEditorStore } from '../../stores/editorStore'
+import { useEdgeStyleStore } from '../../stores/edgeStyleStore'
 import { MindMapNode } from './MindMapNode'
 import { layoutTree } from './layout'
 
@@ -21,6 +22,10 @@ export function MindMapCanvas({ readOnly }: Props) {
   const mindNodes = useEditorStore(s => s.nodes)
   const selectedId = useEditorStore(s => s.selectedId)
   const setSelectedId = useEditorStore(s => s.setSelectedId)
+
+  const edgeType = useEdgeStyleStore(s => s.type)
+  const edgeThickness = useEdgeStyleStore(s => s.thickness)
+  const edgeColor = useEdgeStyleStore(s => s.color)
 
   const { rfNodes, edges } = useMemo(() => {
     const rfNodes: RFNode[] = mindNodes.map(n => ({
@@ -41,12 +46,12 @@ export function MindMapCanvas({ readOnly }: Props) {
         id: `e-${n.parentId}-${n.id}`,
         source: n.parentId!,
         target: n.id,
-        type: 'smoothstep',
-        style: { stroke: '#94a3b8', strokeWidth: 2 },
+        type: edgeType,
+        style: { stroke: edgeColor, strokeWidth: edgeThickness },
       }))
     const laidOut = layoutTree(rfNodes, edges)
     return { rfNodes: laidOut.nodes, edges: laidOut.edges }
-  }, [mindNodes, selectedId, readOnly])
+  }, [mindNodes, selectedId, readOnly, edgeType, edgeThickness, edgeColor])
 
   const onNodeClick = useCallback((_: unknown, node: RFNode) => {
     setSelectedId(node.id)
