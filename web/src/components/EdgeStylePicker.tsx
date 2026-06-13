@@ -1,12 +1,13 @@
 import { useState, useRef, useEffect } from 'react'
-import { useEdgeStyleStore, EDGE_COLORS, type EdgeType, type EdgeThickness } from '../stores/edgeStyleStore'
+import { useEdgeStyleStore, COLOR_PALETTES, type EdgeType, type EdgeThickness } from '../stores/edgeStyleStore'
 
 export function EdgeStylePicker() {
   const [open, setOpen] = useState(false)
   const panelRef = useRef<HTMLDivElement>(null)
-  const { type, thickness, color, setType, setThickness, setColor } = useEdgeStyleStore()
+  const { type, thickness, paletteId, setType, setThickness, setPaletteId } = useEdgeStyleStore()
 
-  // Close on outside click
+  const activePalette = COLOR_PALETTES.find(p => p.id === paletteId) ?? COLOR_PALETTES[0]
+
   useEffect(() => {
     if (!open) return
     const handler = (e: MouseEvent) => {
@@ -39,21 +40,18 @@ export function EdgeStylePicker() {
         title="Line style"
         className={`text-sm px-3 py-1.5 border rounded-md hover:bg-gray-50 flex items-center gap-1.5 ${open ? 'border-blue-400 bg-blue-50 text-blue-700' : 'border-gray-300 text-gray-700'}`}
       >
-        {/* Mini edge preview using current color */}
-        <svg width="20" height="10" viewBox="0 0 30 10">
-          <path
-            d={edgeTypes.find(t => t.value === type)?.preview ?? 'M0,8 L30,2'}
-            fill="none"
-            stroke={color}
-            strokeWidth={Math.min(thickness, 3)}
-            strokeLinecap="round"
-          />
-        </svg>
+        {/* Mini palette swatch strip */}
+        <span className="flex gap-0.5">
+          {activePalette.colors.slice(0, 5).map((c, i) => (
+            <span key={i} className="w-2.5 h-2.5 rounded-sm" style={{ backgroundColor: c }} />
+          ))}
+        </span>
         <span>Lines</span>
       </button>
 
       {open && (
-        <div className="absolute right-0 top-full mt-1 bg-white border border-gray-200 rounded-xl shadow-xl p-4 w-64 z-50">
+        <div className="absolute right-0 top-full mt-1 bg-white border border-gray-200 rounded-xl shadow-xl p-4 w-72 z-50">
+
           {/* Edge type */}
           <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Style</p>
           <div className="grid grid-cols-2 gap-1.5 mb-4">
@@ -97,19 +95,30 @@ export function EdgeStylePicker() {
             ))}
           </div>
 
-          {/* Color */}
-          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Color</p>
-          <div className="flex gap-1.5 flex-wrap">
-            {EDGE_COLORS.map(c => (
+          {/* Palette */}
+          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Color Palette</p>
+          <div className="flex flex-col gap-1.5">
+            {COLOR_PALETTES.map(palette => (
               <button
-                key={c.value}
-                onClick={() => setColor(c.value)}
-                title={c.label}
-                className={`w-7 h-7 rounded-full border-2 transition-transform hover:scale-110 ${
-                  color === c.value ? 'border-gray-800 scale-110' : 'border-transparent'
+                key={palette.id}
+                onClick={() => setPaletteId(palette.id)}
+                className={`flex items-center gap-2 px-2 py-1.5 rounded-lg border transition-colors text-xs ${
+                  paletteId === palette.id
+                    ? 'border-blue-500 bg-blue-50 text-blue-700 font-medium'
+                    : 'border-gray-100 hover:border-gray-300 text-gray-600 hover:bg-gray-50'
                 }`}
-                style={{ backgroundColor: c.value }}
-              />
+              >
+                <span className="flex gap-0.5 shrink-0">
+                  {palette.colors.map((c, i) => (
+                    <span
+                      key={i}
+                      className="w-4 h-4 rounded-sm"
+                      style={{ backgroundColor: c }}
+                    />
+                  ))}
+                </span>
+                <span className="ml-1">{palette.name}</span>
+              </button>
             ))}
           </div>
         </div>
